@@ -7,6 +7,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title>Login</title>
     <link rel="stylesheet" href="https://bootswatch.com/4/darkly/bootstrap.min.css">
+         <link rel="stylesheet" href="../CSS/Estilos_Login.css"/>
 </head>
 <body>
     <center>
@@ -16,13 +17,17 @@
             <asp:HyperLink ID="lbl_UsuarioNuevo" runat="server" NavigateUrl="CrearUsuario.aspx">Crear Usuario Nuevo </asp:HyperLink>
 
         </div>
-        <p>
-            Usuario&nbsp;&nbsp;&nbsp; <asp:TextBox class="form-control me-sm-2" ID="txt_Usuario" runat="server"  Width="179px"  MaxLength="20" OnTextChanged="txt_Usuario_TextChanged"></asp:TextBox>
+        <p >
+          Usuario&nbsp;&nbsp;
+            <input id="txt_Usuario2" type="text" required="required" runat="server" maxlength="20" class="form-control me-sm-2"   width="12px" />
         </p>
         <p>
-            Clave&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;
-            <asp:TextBox class="form-control me-sm-2" ID="txt_Clave" runat="server"  Width="180px" MaxLength="20" OnTextChanged="txt_Clave_TextChanged" TextMode="Password"></asp:TextBox>
+              Contraseña&nbsp;&nbsp;
+
+          <input id="txt_Clave2" type="password" required="required" runat="server" maxlength="20" class="form-control me-sm-2"  width="180px" />
+
         </p>
+       
         <div style="margin-left: 80px">
             <asp:Button class="btn btn-primary" ID="btn_IniciarSesion" runat="server" OnClick="btn_IniciarSesion_Click" Text="Iniciar Sesion" />
             

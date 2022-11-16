@@ -19,7 +19,7 @@
         <div>
             <h2>Ingrese los datos del nuevo Producto</h2>
             <h2>&nbsp;</h2>
-            <asp:HyperLink ID="HyperLink1" runat="server" NavigateUrl="CambiarCredenciales.aspx">Cambiar Credenciales</asp:HyperLink>
+ 
             <br />
             <br />
               <label>Codigo Producto</label>

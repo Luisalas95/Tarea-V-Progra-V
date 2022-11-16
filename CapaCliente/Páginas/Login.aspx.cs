@@ -1,19 +1,20 @@
 ﻿using ConsumeApis.Clases;
 using ConsumeApis.APIS;
-using QuickType;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using QuickType;
+
 
 namespace CapaCliente
 {
     public partial class Login : System.Web.UI.Page
     {
         public ApiLogin ApiLogin = new ApiLogin();
-        public List<Login> logins = new List<Login>();
+      
         protected void Page_Load(object sender, EventArgs e)
         {
            
@@ -25,15 +26,36 @@ namespace CapaCliente
         {
             try
             {
-                string usuario = txt_Usuario.Text;
-                int result = Int32.Parse(usuario);
-                string clave = txt_Clave.Text;
-                logins = ApiLogin.LoginConsulta(usuario);
-              
-                Response.Redirect("AgregarProductoNuevo.aspx");
+                LoginUsuario nuevoLogin = new LoginUsuario()
+                {
+                    Identificacion = txt_Usuario2.Value,
+                    Password = txt_Clave2.Value
+                };
+                string retusltado =   ApiLogin.LoginConsulta(nuevoLogin);
+                string[] arreglo = retusltado.Split('/');
+             
+                if (arreglo[0] == "201")
+                {
+
+                    Response.Redirect("AgregarProductoNuevo.aspx?Token=" + arreglo[1]);
+                }
+
+                if (arreglo[0] == "404")
+                {
+
+                    Response.Write("<script>alert('Usuario y/o contraseña incorrectos')</script>");
+                }
+
+                if (arreglo[0] == "500")
+                {
+                    Response.Write("<script>alert('Error interno')</script>");
+                }
+
+
             }
-            catch {
-                Response.Write("<script>alert('Usuario y/o contraseña incorrectos')</script>");
+            catch (Exception ex) {
+                ScriptManager.RegisterStartupScript(this, GetType(),
+                                                           "alert", "alert('" + ex.Message + "')", true);
             }
         }
 

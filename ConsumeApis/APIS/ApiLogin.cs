@@ -1,4 +1,5 @@
 ﻿using ConsumeApis.Clases;
+using Newtonsoft.Json;
 using QuickType;
 using System;
 using System.Collections.Generic;
@@ -14,81 +15,46 @@ namespace ConsumeApis.APIS
         private const string BaseUrl = "http://localhost:56108/api/LoginUsuarios";
         public ApiLogin() { }
 
-        public List<Login> LoginConsulta(string id)
+        public string LoginConsulta(LoginUsuario usuario)
         {
+            string retorno = "";
             try
             {
-
-                List<Login> E2 = new List<Login>();
-                using (var estudian = new HttpClient())
+                string json = usuario.ToJson();
+                using (var usur = new HttpClient())
                 {
-
                     var task1 = Task.Run(async () =>
                     {
-                        string url = BaseUrl + "/";
-                        return await estudian.GetAsync(url+id);
+                        string url = BaseUrl + "/LoginUsuario";
+                        return await usur.PostAsync(url, new StringContent(json, Encoding.UTF8, "application/json")
+                        );
+
                     }
-                    );
+                        );
                     HttpResponseMessage Message = task1.Result;
-                    if (Message.StatusCode == System.Net.HttpStatusCode.OK)
+                    if (Message.StatusCode == System.Net.HttpStatusCode.Created)
                     {
                         var task2 = Task<string>.Run(async () =>
                         {
                             return await Message.Content.ReadAsStringAsync();
                         });
                         string resultSrt = task2.Result;
-                        E2 = Login.FromJson(resultSrt);
+                        return retorno = "201" + "/" + resultSrt;
                     }
 
                     if (Message.StatusCode == System.Net.HttpStatusCode.NotFound)
                     {
-                        E2 = null;
+                        return retorno = "404";
                     }
-                    return E2;
+                    if (Message.StatusCode == System.Net.HttpStatusCode.InternalServerError)
+                    {
+
+                        return retorno = "500";
+
+                    }
+
                 }
-            }
-            catch (Exception)
-            {
 
-                throw;
-            }
-
-        }
-
-
-
-
-        public List<Login> TodoLogin()
-        {
-            try
-            {
-                List<Login> E2 = new List<Login>();
-                using (var logins = new HttpClient())
-                {
-
-                    var task1 = Task.Run(async () =>
-                    {
-                        string url = BaseUrl + "/";
-                        return await logins.GetAsync(url);
-                    }
-                    );
-                    HttpResponseMessage Message = task1.Result;
-                    if (Message.StatusCode == System.Net.HttpStatusCode.OK)
-                    {
-                        var task2 = Task<string>.Run(async () =>
-                        {
-                            return await Message.Content.ReadAsStringAsync();
-                        });
-                        string resultSrt = task2.Result;
-                        E2 = Login.FromJson(resultSrt);
-                    }
-
-                    if (Message.StatusCode == System.Net.HttpStatusCode.NotFound)
-                    {
-                        E2 = null;
-                    }
-                    return E2;
-                }
 
             }
             catch (Exception)
@@ -96,8 +62,56 @@ namespace ConsumeApis.APIS
 
                 throw;
             }
-
+            return retorno;
         }
+
+        public string CrearUsuario(Usuarios usuario)
+        {
+            string retorno = "";
+            try
+            {
+                string json = usuario.ToJson();
+                
+                using (var usur = new HttpClient())
+                {
+                    var task1 = Task.Run(async () =>
+                    {
+                        
+                        return await usur.PostAsync(BaseUrl, new StringContent(json, Encoding.UTF8, "application/json")
+                        );
+
+                    }
+                        );
+                    HttpResponseMessage Message = task1.Result;
+                    if (Message.StatusCode == System.Net.HttpStatusCode.Created)
+                    {
+               
+                        return retorno = "201";
+                    }
+
+                    if (Message.StatusCode == System.Net.HttpStatusCode.Conflict)
+                    {
+                        return retorno = "409";
+                    }
+                    if (Message.StatusCode == System.Net.HttpStatusCode.InternalServerError)
+                    {
+
+                        return retorno = "500";
+
+                    }
+
+                }
+
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            return retorno;
+        }
+
 
 
 

@@ -41,8 +41,9 @@ namespace CapaCliente.Páginas
             }
             catch (Exception ex)
             {
-                
-                Response.Write("<script> alert('Error al guardar los datos, intente de nuevo')  </script> ");
+
+                ScriptManager.RegisterStartupScript(this, GetType(),
+                                                           "alert", "alert('" + ex.Message + "')", true);
             }
 
 

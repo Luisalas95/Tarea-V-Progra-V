@@ -33,22 +33,22 @@ namespace CapaCliente
         protected global::System.Web.UI.WebControls.HyperLink lbl_UsuarioNuevo;
 
         /// <summary>
-        /// Control txt_Usuario.
+        /// Control txt_Usuario2.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txt_Usuario;
+        protected global::System.Web.UI.HtmlControls.HtmlInputText txt_Usuario2;
 
         /// <summary>
-        /// Control txt_Clave.
+        /// Control txt_Clave2.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txt_Clave;
+        protected global::System.Web.UI.HtmlControls.HtmlInputPassword txt_Clave2;
 
         /// <summary>
         /// Control btn_IniciarSesion.
