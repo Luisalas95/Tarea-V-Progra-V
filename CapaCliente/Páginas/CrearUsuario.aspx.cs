@@ -35,19 +35,19 @@ namespace CapaCliente.Páginas
         {
             try
             {
-                Encriptar EncriptaClave = new Encriptar();
+              //  Encriptar EncriptaClave = new Encriptar();
                 GeneraClave NuevaClave = new GeneraClave(); 
                 ApiLogin ConsuemApi = new ApiLogin();
                 string ClaveNueva = "";
                 string Clave = "";
                 string ClaveEncriptada = "";
                 ClaveNueva = GeneraClave.ClaveGenerada(Clave);
-                ClaveEncriptada = EncriptaClave.GetSHA256(ClaveNueva);
+               // ClaveEncriptada = EncriptaClave.GetSHA256(ClaveNueva);
                 Usuarios nuevoUsario = new Usuarios();
                 nuevoUsario.Identificacion = txt_ID.Text;
                 nuevoUsario.Nombre = txt_Nombre.Text;
                 nuevoUsario.Apellidos = txt_Apellidos.Text;
-                nuevoUsario.Password = ClaveEncriptada;
+                nuevoUsario.Password = ClaveNueva;
                 string codigoRespuesta = ConsuemApi.CrearUsuario(nuevoUsario);
                 if (codigoRespuesta == "201")
                 {
@@ -59,7 +59,7 @@ namespace CapaCliente.Páginas
                     txt_ID.Text = "";
                     txt_ID.Text = "";
                 }
-                if (codigoRespuesta == "404")
+                if (codigoRespuesta == "409")
                 {
                     ScriptManager.RegisterStartupScript(this, GetType(),
                                                           "alert", "alert('" + "El usuario que intenta crear ya existe en la BD" + "')", true);

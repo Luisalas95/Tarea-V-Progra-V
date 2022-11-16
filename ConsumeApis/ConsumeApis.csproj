@@ -45,9 +45,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="APIS\ApiLogin.cs" />
+    <Compile Include="APIS\ApiProductos.cs" />
     <Compile Include="Clases\Encriptar.cs" />
     <Compile Include="Clases\GeneraClave.cs" />
     <Compile Include="Clases\LoginUsuario.cs" />
+    <Compile Include="Clases\Producto.cs" />
     <Compile Include="Clases\Usuarios.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

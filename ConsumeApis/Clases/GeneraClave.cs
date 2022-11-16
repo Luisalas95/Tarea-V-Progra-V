@@ -17,7 +17,7 @@ namespace CapaDatos
             int longitud = caracteres.Length;
 
             char letra;
-            int longitudContrasenia = 5;
+            int longitudContrasenia = 12;
             clave = string.Empty;
 
             //vueltas para obtener las letras de la variable caracteres.

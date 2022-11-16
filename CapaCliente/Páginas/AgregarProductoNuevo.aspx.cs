@@ -7,16 +7,62 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using ConsumeApis;
 using Swashbuckle.Swagger;
-using ConsumeApis;
+using QuickType2;
+using System.Security.Cryptography.X509Certificates;
+using ConsumeApis.APIS;
+
 namespace CapaCliente.Páginas
 {
     public partial class AgregarProductoNuevo : System.Web.UI.Page
     {
+        public ApiProductos ApiProduc = new ApiProductos();
+
        
         protected void Page_Load(object sender, EventArgs e)
         {
-           // GridViewProductos.DataSource = ProductoNegocios.ConsultaProductos();
-            GridViewProductos.DataBind();
+            try
+            {
+                if (!Page.IsPostBack)
+                {
+                    string tokens = Request.QueryString["Token"];
+                    string TokenSinComillas = tokens.Replace("\"", "");
+                    List<Producto> NuevaLista = new List<Producto>();
+                    NuevaLista = ApiProduc.ListarTodosProductos(TokenSinComillas);
+
+                    if (NuevaLista == null)
+                    {
+
+                        string msg = "Problemas para cargar los datos verifue su tokens";
+                        ScriptManager.RegisterStartupScript(this, GetType(),
+                       "alert",
+                       "alert('" + msg + "')", true);
+
+                    }
+                    else
+                    {
+
+                        GridViewProductos.DataSource = NuevaLista;
+                        GridViewProductos.DataBind();
+
+                    }
+
+
+
+
+                }
+
+            }
+            catch (Exception ex)
+            {
+
+                string msg = ex.Message;
+                ScriptManager.RegisterStartupScript(this, GetType(),
+               "alert",
+               "alert('" + msg + "')", true);
+            }
+
+  
+
 
         }
 
