@@ -10,24 +10,28 @@ using Swashbuckle.Swagger;
 using QuickType2;
 using System.Security.Cryptography.X509Certificates;
 using ConsumeApis.APIS;
+using Antlr.Runtime;
 
 namespace CapaCliente.Páginas
 {
     public partial class AgregarProductoNuevo : System.Web.UI.Page
     {
         public ApiProductos ApiProduc = new ApiProductos();
+        public  string tokens;
 
-       
+
+
+
         protected void Page_Load(object sender, EventArgs e)
         {
             try
             {
-                if (!Page.IsPostBack)
-                {
-                    string tokens = Request.QueryString["Token"];
-                    string TokenSinComillas = tokens.Replace("\"", "");
-                    List<Producto> NuevaLista = new List<Producto>();
-                    NuevaLista = ApiProduc.ListarTodosProductos(TokenSinComillas);
+               // if (!Page.IsPostBack)
+               // {
+                    tokens = Request.QueryString["Token"];
+             
+                List<Producto> NuevaLista = new List<Producto>();
+                    NuevaLista = ApiProduc.ListarTodosProductos(tokens);
 
                     if (NuevaLista == null)
                     {
@@ -48,8 +52,11 @@ namespace CapaCliente.Páginas
 
 
 
+               // }
 
-                }
+
+
+
 
             }
             catch (Exception ex)
@@ -70,18 +77,62 @@ namespace CapaCliente.Páginas
         {
             try
             {
-              //  Producto1.CodigoProducto = int.Parse(txt_codigoproduct.Value);
-                //Producto1.NombreProducto = txt_Nomb.Value;
-             //   Producto1.Existencias = float.Parse(txt_existencia.Value);
-              //  Producto1.BodegaUbicacion = txt_UbicacionBodega.Value;
-               // ProductoNegocios.CrudProductos(1, Producto1);
-                Response.Write("<script> alert('El producto se agrego con exito')  </script> ");
-                txt_codigoproduct.Value = "";
-                txt_Nomb.Value = "";
-                txt_UbicacionBodega.Value = "";
-                txt_existencia.Value = "";
-                //GridViewProductos.DataSource = ProductoNegocios.ConsultaProductos();
-                GridViewProductos.DataBind();
+                Producto NuevoProducto = new Producto();
+                NuevoProducto.CodigoProducto = int.Parse(txt_codigoproduct.Value);
+                NuevoProducto.NombreProducto = txt_Nomb.Value;
+                NuevoProducto.BodegaUbicacion = txt_UbicacionBodega.Value;
+                NuevoProducto.Existencias = int.Parse(txt_existencia.Value);
+                String codigoresulta = ApiProduc.InsertaProducto(NuevoProducto, tokens);
+
+                 switch (codigoresulta)
+                {
+                    case "201":
+
+                        ScriptManager.RegisterStartupScript(this, GetType(),
+                       "alert",
+                       "alert('" + "Se agrego con exito" + "')", true);
+                        txt_codigoproduct.Value = "";
+                        txt_Nomb.Value = "";
+                        txt_UbicacionBodega.Value = "";
+                        txt_existencia.Value = "";
+                        List<Producto> NuevaLista = new List<Producto>();
+                        NuevaLista = ApiProduc.ListarTodosProductos(tokens);
+                        GridViewProductos.DataSource = NuevaLista;
+                        GridViewProductos.DataBind();
+
+                        break;
+                    case "409":
+
+                        ScriptManager.RegisterStartupScript(this, GetType(),
+                        "alert",
+                        "alert('" + "El producto que esta intentando registrar ya existe" + "')", true);
+                        break;
+
+                    case "500":
+
+                        ScriptManager.RegisterStartupScript(this, GetType(),
+                        "alert",
+                        "alert('" + "Error de servidor" + "')", true);
+                        break;
+
+                    case "401":
+
+                        ScriptManager.RegisterStartupScript(this, GetType(),
+                        "alert",
+                        "alert('" + "Se vencio la sesion" + "')", true);
+                       
+                        break;
+
+                    default:
+
+                        ScriptManager.RegisterStartupScript(this, GetType(),
+                          "alert",
+                          "alert('" + codigoresulta + "')", true);
+
+                        break;
+                }
+
+
 
 
             }
@@ -104,15 +155,31 @@ namespace CapaCliente.Páginas
             {
                 GridViewRow row = GridViewProductos.SelectedRow;
                 int CodigoProducto = Convert.ToInt32(GridViewProductos.DataKeys[row.RowIndex].Value);
-      
-                Response.Redirect("MantenimientoProductos.aspx?CodigoP=" + CodigoProducto);
+                List<Producto> NuevaLista = new List<Producto>();
+                NuevaLista = ApiProduc.ListarTodosProductos(tokens);
+                string NombreProducto= "";
+                string Bodega ="";
+                long Existencias =0;
+                foreach (var item in NuevaLista)
+                {
+                    if (item.CodigoProducto == CodigoProducto)
+                    {
+                        NombreProducto = item.NombreProducto;
+                        Bodega = item.BodegaUbicacion;
+                        Existencias = item.Existencias;
 
+                    }
+                }
 
+                  Response.Redirect("MantenimientoProductos.aspx?CodigoP=" + CodigoProducto
+                   + "&NomProduct=" + NombreProducto + "&Existenc=" + Existencias + "&Bodeg=" + Bodega + "&Token=" + tokens);
+
+            
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                Response.Write("<script> alert('Error')  </script> ");
+                ScriptManager.RegisterStartupScript(this, GetType(),
+                                                           "alert", "alert('" + ex.Message + "')", true);
             }
 
         }
